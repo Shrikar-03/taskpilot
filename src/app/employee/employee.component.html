@@ -1,0 +1,96 @@
+<div class="sidebar" [ngClass]="{'dark-theme': isDarkTheme, 'collapsed': isSidebarCollapsed}">
+  <div class="expand-arrow" [ngClass]="{'dark-theme': isDarkTheme}" (click)="toggleSidebar()">&#9664;</div>
+  <div class="sidebar-icons">
+    <div class="icon" *ngFor="let icon of icons" [ngClass]="{'dark-theme': isDarkTheme}" (click)="navigate(icon.route)">
+      {{ icon.symbol }}<span>{{ icon.label }}</span>
+    </div>
+  </div>
+  <div class="theme-switch" [ngClass]="{'dark-theme': isDarkTheme}" (click)="toggleTheme()">
+    <span id="themeIcon">{{ themeIcon }}</span>
+  </div>
+</div>
+
+<div class="main-content" [ngClass]="{'dark-theme': isDarkTheme, 'collapsed': isSidebarCollapsed}">
+  
+
+    <div class="header-container">
+      
+      <div class="search-container">
+        <input type="text" id="search-input" [(ngModel)]="searchQuery" placeholder="Search tasks..." (input)="onSearchInput()" (keydown.enter)="submitSearch()">
+        <button class="search-submit-btn" (click)="submitSearch()">Search</button>
+        <button class="clear-search-btn" (click)="clearSearch()">Clear</button>
+      </div>
+    </div>
+    <div id="task-container" [ngClass]="{'dark-theme': isDarkTheme}">
+      <!-- No results message -->
+      <div *ngIf="filteredTasks.length === 0 && searchQuery && !searchInProgress" class="no-results-message">
+        No matching tasks found.
+      </div>
+      
+      <div *ngIf="filteredTasks.length === 0 && !searchQuery && !searchInProgress">
+        <p>No tasks assigned to you.</p>
+      </div>
+      
+      <!-- Task tiles -->
+      <div *ngFor="let task of filteredTasks" [attr.data-id]="task.id" class="task-tile"
+        [ngClass]="{
+          'dark-theme': isDarkTheme,
+          'priority-low': task.priority === 'low',
+          'priority-medium': task.priority === 'medium',
+          'priority-high': task.priority === 'high',
+          'status-not-started': task.status === 'not started',
+          'status-in-progress': task.status === 'in progress',
+          'status-completed': task.status === 'completed',
+          'status-past-deadline': task.status === 'past deadline'
+        }">
+        <div class="task-title">{{ task.title }}</div>
+        <div class="task-details">{{ task.description }}</div>
+        <div class="task-assignee">Assignee: {{ task.assignee }}</div>
+        <div class="task-priority">Priority: {{ task.priority }}</div>
+        <div class="task-dates">
+          <div>Start: {{ task.startDate }}</div>
+          <div>Deadline: {{ task.deadline }}</div>
+        </div>
+        <div class="task-status">{{ getTaskStatus(task) }}</div>
+        <div class="task-actions">
+          <input type="checkbox" id="markAsDone{{ task.id }}" [checked]="task.status === 'completed'" (change)="toggleMarkAsDone(task)">
+          <label for="markAsDone{{ task.id }}">Mark as Done</label>
+        </div>
+        <div class="file-actions">
+          <!-- Show Add Files button if no file is associated with the task -->
+          <button *ngIf="!fileDetails[task.id]?.fileName" class="add-files-btn" [ngClass]="{'dark-theme': isDarkTheme}" (click)="openFileUpload(task.id)">
+            <i class="fa fa-upload"></i> Add Files
+          </button>
+    
+          <!-- Show Delete File button if a file is associated with the task -->
+          <button *ngIf="fileDetails[task.id]?.fileName" class="del-file-btn" (click)="confirmDeleteFile(task.id)">
+            <i class="fa fa-trash"></i> Delete
+          </button>
+    
+          <!-- Display the file name if a file is associated -->
+          <a *ngIf="fileDetails[task.id]?.fileName" [href]="fileDetails[task.id]?.fileUrl" class="file-name" target="_blank">{{ fileDetails[task.id]?.fileName }}</a>
+        </div>
+      </div>
+    </div>
+    
+    
+  <!-- Confirmation Modal -->
+  <div *ngIf="isConfirmationModalVisible" class="confirm-del" [ngClass]="{'dark-theme': isDarkTheme}">
+    <div class="confirm-del-content">
+      <span class="confirm-del-close-button" (click)="closeConfirmationModal()">&times;</span>
+      <p>Are you sure you want to delete this file?</p>
+      <div class="confirm-del-buttons-container">
+        <button class="btn-yes" (click)="confirmAction()">Yes</button>
+        <button class="btn-no" (click)="closeConfirmationModal()">No</button>
+      </div>
+    </div>
+  </div>
+
+<div *ngIf="isMarkAsDoneModalVisible" id="markAsDoneModal" class="modal" [ngClass]="{'dark-theme': isDarkTheme}">
+  <div class="modal-content" [ngClass]="{'dark-theme': isDarkTheme}">
+    <span class="close-button" [ngClass]="{'dark-theme': isDarkTheme}" (click)="closeMarkAsDoneModal()">&times;</span>
+    <p>Are you sure you want to mark this task as done?</p>
+    <button class="btn-yes" [ngClass]="{'dark-theme': isDarkTheme}" *ngIf="taskToComplete" (click)="toggleMarkAsDone(taskToComplete)">Yes</button>
+    <button class="btn-no" [ngClass]="{'dark-theme': isDarkTheme}" (click)="closeMarkAsDoneModal()">No</button>
+  </div>
+</div>

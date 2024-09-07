@@ -1,0 +1,220 @@
+
+ <div class="sidebar" [ngClass]="{'dark-theme': isDarkTheme, 'collapsed': isSidebarCollapsed}">
+    <div class="expand-arrow" (click)="toggleSidebar()" [ngClass]="{'dark-theme': isDarkTheme}">&#9664;</div>
+    <div class="sidebar-icons">
+      <div class="icon" *ngFor="let icon of icons" (click)="navigate(icon.route)">
+        {{ icon.symbol }}<span>{{ icon.label }}</span>
+      </div>
+    </div>
+    <div class="theme-switch" (click)="toggleTheme()">
+      <span id="themeIcon">{{ themeIcon }}</span>
+    </div>
+  </div>
+  
+  <div class="main-content" [ngClass]="{'dark-theme': isDarkTheme, 'collapsed': isSidebarCollapsed}">
+    <div class="header-container">
+      <button class="add-task-btn" (click)="showTaskForm()" [ngClass]="{'dark-theme': isDarkTheme}">+ Add Task</button>
+      
+      <div class="search-container">
+        <input type="text" id="search-input" [(ngModel)]="searchQuery" placeholder="Search tasks..." (input)="onSearchInput()" (keydown.enter)="submitSearch()">
+        <button class="search-submit-btn" (click)="submitSearch()">Search</button>
+        <button class="clear-search-btn" (click)="clearSearch()">Clear</button>
+      </div>
+    </div>
+    
+    <div id="task-container">
+      <div *ngIf="filteredTasks.length === 0 && searchQuery && !searchInProgress" class="no-results-message">
+        No matching tasks found.
+      </div>
+      <div *ngFor="let task of filteredTasks" [attr.data-id]="task.id" class="task-tile"
+           [ngClass]="{
+             'priority-low': task.priority === 'low',
+             'priority-medium': task.priority === 'medium',
+             'priority-high': task.priority === 'high',
+             'status-not-started': task.status === 'not started',
+             'status-in-progress': task.status === 'in progress',
+             'status-completed': task.status === 'completed',
+             'status-past-deadline': task.status === 'past deadline'
+           }">
+           <div class="task-title">
+            <h3 style="font-weight: bold;">{{ task.title }}</h3>
+          </div>
+        <div class="task-details">{{ task.description }}</div>
+        <div class="task-assignee">Assignee: {{ task.assignee }}</div>
+        <div class="task-priority">Priority: {{ task.priority }}</div>
+        <div class="task-dates">
+          <div>Start: {{ task.startDate }}</div>
+          <div>Deadline: {{ task.deadline }}</div>
+        </div>
+        <div class="task-status">{{ getTaskStatus(task) }}</div>
+        <div class="task-actions">
+          <div class="icon edit" [attr.data-tooltip]="'Edit ' + task.title" (click)="editTask(task)">✏️</div>
+          <div class="icon delete" [attr.data-tooltip]="'Delete ' + task.title" (click)="confirmDelete(task.id)">🗑️</div>
+          
+        </div>
+        <div class="task-attachment" [attr.data-tooltip]="'Attachment ' + task.title"  (click)="openAttachmentModal(task.id)" >📎</div>
+  
+      </div>
+    </div>
+  </div>
+  
+  <div *ngIf="isTaskFormVisible" class="add-task-form-overlay" [ngClass]="{'dark-theme': isDarkTheme}">
+    <div class="add-task-form" [ngClass]="{'dark-theme': isDarkTheme}">
+      <h2>Task Details</h2>
+      <button class="close-btn" (click)="closeTaskForm()">X</button>
+      <form [formGroup]="taskForm" (ngSubmit)="saveTask()">
+        <label for="taskName">Task Title</label>
+        <input type="text" id="taskName" formControlName="title" placeholder="enter task title" required>
+        <div *ngIf="taskForm.get('title')?.invalid && taskForm.get('title')?.touched" class="error">
+          Task title is required.
+        </div>
+  
+        <label for="taskDescription">Description</label>
+        <textarea id="taskDescription" formControlName="description" placeholder="Enter task description" required ></textarea>
+        <div *ngIf="taskForm.get('description')?.invalid && taskForm.get('description')?.touched" class="error">
+          Task description is required.
+        </div>
+  
+        <label for="taskAssignee">Assignee</label>
+        <select id="taskAssignee" formControlName="assignee" placeholder="choose Assignee">
+          <option value="No assignee">No assignee</option>
+          <option *ngFor="let assignee of assignees$ | async" [value]="assignee.email">{{ assignee.name }} ({{ assignee.email }})</option>
+        </select>
+  
+        <label for="taskPriority">Priority</label>
+        <select id="taskPriority" formControlName="priority" placeholder='choose priority'required>
+          <option value="low"  selected>Low</option>
+          <option value="medium">Medium</option>
+          <option value="high">High</option>
+        </select>
+        <div *ngIf="taskForm.get('priority')?.invalid && taskForm.get('priority')?.touched" class="error">
+          Task priority is required.
+        </div>
+  
+        <label for="taskStartDate">Start Date</label>
+        <input type="date" id="taskStartDate" formControlName="startDate" required>
+        
+        <!-- Start Date Validation Errors -->
+        <div *ngIf="taskForm.get('startDate')?.touched" class="error">
+          <div *ngIf="taskForm.get('startDate')?.hasError('required')">
+            Start date is required.
+          </div>
+          <div *ngIf="taskForm.get('startDate')?.hasError('startDateNotInPast')">
+            Start date should not be in the past.
+          </div>
+        </div>
+        
+        <!-- Deadline Field -->
+        <label for="taskDeadline">Deadline</label>
+        <input type="date" id="taskDeadline" formControlName="deadline" required>
+        
+        <!-- Deadline Validation Errors -->
+        <div *ngIf="taskForm.get('deadline')?.touched" class="error">
+          <div *ngIf="taskForm.get('deadline')?.hasError('required')">
+            Deadline is required.
+          </div>
+        </div>
+        
+        <!-- Combined Validation Error for Deadline Before Start Date -->
+        <div *ngIf="taskForm.errors?.['deadlineBeforeStartDate'] &&
+                    (taskForm.get('deadline')?.touched || taskForm.get('startDate')?.touched)" class="error">
+          Deadline cannot be before the start date.
+        </div>
+        <div class="form-buttons">
+          <button type="submit" class="submit-btn" [disabled]="taskForm.invalid">Save</button>
+          <button type="button" class="cancel-btn" (click)="closeTaskForm()">Cancel</button>
+        </div>
+      </form>
+    </div>
+
+  </div>
+  
+  
+  <div *ngIf="isDeleteModalVisible" id="deleteConfirmationModal" class="modal" [ngClass]="{'dark-theme': isDarkTheme}">
+    <div class="modal-content">
+      <span class="close-button" (click)="closeDeleteModal()">&times;</span>
+      <p>Are you sure you want to delete this task?</p>
+      <div class="buttons-container">
+        <button class="btn-yes" (click)="deleteTask(deleteTaskId!)">Yes</button>
+        <button class="btn-no" (click)="closeDeleteModal()">No</button>
+      </div>
+    </div>
+  </div>
+  
+  
+  <!-- Modal Structure -->
+  <!-- Assuming this is part of your task template -->
+  
+  
+  <!-- Modal for displaying attachments -->
+  <!-- Debug display -->
+  <!-- Debug display -->
+  <!-- <pre>{{ attachmentFiles | json }}</pre> -->
+  
+  <!-- Modal for displaying attachments -->
+  <!-- <div *ngIf="isAttachmentModalVisible" class="modal">
+    <div class="modal-content">
+      <span class="close-button" (click)="closeModal()">&times;</span>
+      <h6>Attachments for {{ attachmentTaskTitle }}</h6>
+      <ul>
+        <li *ngFor="let file of attachmentFiles">
+          <a [href]="file.url" target="_blank">{{ file.name }}</a>
+        </li>
+      </ul>
+      <button (click)="closeModal()">Close</button>
+    </div>
+  </div> -->
+  
+  
+  
+  
+  <div class="modal-file" *ngIf="isModalOpen" [ngClass]="{'dark-theme': isDarkTheme}">
+    <div class="modal-file-content"  [ngClass]="{'dark-theme': isDarkTheme}">
+      <span class="file-close" (click)="closeModal()">&times;</span>
+      <h5>Files for Task</h5>
+      <div *ngFor="let file of taskFiles" class="file-entry">
+        <a [href]="file.fileUrl" target="_blank">{{file.fileName}}</a>
+      </div>
+      <button class="file-ok-button" (click)="closeModal()">OK</button>
+    </div>
+  </div>
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  <!-- Modal for displaying file details
+  <div class="modal" *ngIf="isModalOpen">
+    <div class="modal-content">
+      <span class="close" (click)="closeModal()">&times;</span>
+      <h2>Files for Task: {{selectedTaskId}}</h2>
+      <div *ngFor="let file of taskFiles" class="file-entry">
+        <p>{{file.fileName}}</p>
+        <a [href]="file.fileUrl" target="_blank">Download</a>
+      </div>
+    </div>
+  </div> -->

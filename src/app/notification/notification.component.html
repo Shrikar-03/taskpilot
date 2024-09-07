@@ -1,0 +1,33 @@
+<!-- notification.component.html -->
+<div class="sidebar" [ngClass]="{'dark-theme': isDarkTheme, 'expanded': isSidebarCollapsed}">
+  <div class="expand-arrow" [ngClass]="{'dark-theme': isDarkTheme}" (click)="toggleSidebar()">&#9664;</div>
+  <div class="sidebar-icons">
+    <div class="icon" *ngFor="let icon of icons" [ngClass]="{'dark-theme': isDarkTheme}" (click)="navigate(icon.route)">
+      {{ icon.symbol }}<span>{{ icon.label }}</span>
+    </div>
+  </div>
+  <div class="theme-switch" [ngClass]="{'dark-theme': isDarkTheme}" (click)="toggleTheme()">
+    <span id="themeIcon">{{ themeIcon }}</span>
+  </div>
+</div>
+
+<div class="main-content" [ngClass]="{'dark-theme': isDarkTheme, 'expanded': isSidebarCollapsed}">
+  <div class="task-container" [ngClass]="{'dark-theme': isDarkTheme}">
+    <div *ngIf="notifications.length > 0" class="task-tiles-wrapper" [ngClass]="{'dark-theme': isDarkTheme}">
+      <div class="notif-container" *ngFor="let notification of notifications" [ngClass]="{'dark-theme': isDarkTheme}">
+        <div class="notification">
+          <div class="notification-header">
+            <strong>File Uploaded</strong>
+          </div>
+          <div class="notification-body">
+            <p><strong>File:</strong> {{ notification.fileName }}</p>
+            <p><strong>Assignee:</strong> {{ notification.assigneeName }}</p>
+            <p><strong>Task:</strong> {{ notification.taskTitle }}</p>
+            <p><strong>Timestamp:</strong> {{ notification.timestamp | date:'short' }}</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+

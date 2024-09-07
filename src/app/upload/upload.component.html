@@ -1,0 +1,29 @@
+<div id="myModal" class="modal" [ngClass]="{'dark-theme': isDarkTheme}">
+  <div class="modal-content">
+    <span class="close" (click)="closeModal()">&times;</span>
+
+    <!-- Upload Area -->
+    <div class="upload-area"
+         (dragover)="onDragOver($event)"
+         (dragleave)="onDragLeave($event)"
+         (drop)="onFileDropped($event)"
+         [ngClass]="{'dragover': isDragover, 'dark-theme': isDarkTheme}">
+
+      <!-- Choose File Button and Text -->
+      <div class="file-input-container">
+        <label class="choose-file-label">
+          Choose File
+          <input type="file" (change)="onFileSelected($event)" style="display: none;" #fileInput>
+        </label>
+
+        <!-- Display File Name or 'No file chosen' -->
+        <p class="file-info" *ngIf="files.length === 0">No file chosen</p>
+        <p class="file-info" *ngIf="files.length > 0">{{ files[0].name }}</p>
+      </div>
+
+    </div>
+
+    <!-- Save Button -->
+    <button class="rectangular-button" (click)="saveFiles()">Save</button>
+  </div>
+</div>

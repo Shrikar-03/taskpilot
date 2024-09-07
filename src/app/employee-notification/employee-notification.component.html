@@ -1,0 +1,62 @@
+<!-- notification.component.html
+<div class="sidebar" [ngClass]="{'dark-theme': isDarkTheme, 'expanded': isSidebarCollapsed}">
+  <div class="expand-arrow" [ngClass]="{'dark-theme': isDarkTheme}" (click)="toggleSidebar()">&#9664;</div>
+  <div class="sidebar-icons">
+    <div class="icon" *ngFor="let icon of icons" [ngClass]="{'dark-theme': isDarkTheme}" (click)="navigate(icon.route)">
+      {{ icon.symbol }}<span>{{ icon.label }}</span>
+    </div>
+  </div>
+  <div class="theme-switch" [ngClass]="{'dark-theme': isDarkTheme}" (click)="toggleTheme()">
+    <span id="themeIcon">{{ themeIcon }}</span>
+  </div>
+</div> -->
+
+<!-- <div *ngIf="notifications.length === 0">
+  <p>No notifications available.</p>
+</div>
+
+<div *ngFor="let notification of notifications">
+  <p><strong>{{ notification.title }}</strong></p>
+  <p>{{ notification.message }}</p>
+  <p>Deadline: {{ notification.deadline.toLocaleDateString() }}</p>
+  <p>Priority: {{ notification.priority }}</p>
+</div>
+
+<ng-template #noNotifications>
+  <p>No notifications available.</p>
+</ng-template> -->
+
+<!-- Display a message when there are no notifications -->
+<div class="sidebar" [ngClass]="{'dark-theme': isDarkTheme, 'expanded': isSidebarCollapsed}">
+  <div class="expand-arrow" [ngClass]="{'dark-theme': isDarkTheme}" (click)="toggleSidebar()">&#9664;</div>
+  <div class="sidebar-icons">
+    <div class="icon" *ngFor="let icon of icons" [ngClass]="{'dark-theme': isDarkTheme}" (click)="navigate(icon.route)">
+      {{ icon.symbol }}<span>{{ icon.label }}</span>
+    </div>
+  </div>
+  <div class="theme-switch" [ngClass]="{'dark-theme': isDarkTheme}" (click)="toggleTheme()">
+    <span id="themeIcon">{{ themeIcon }}</span>
+  </div>
+</div>
+
+<div class="main-content" [ngClass]="{'dark-theme': isDarkTheme, 'expanded': isSidebarCollapsed}">
+  <div class="task-container" [ngClass]="{'dark-theme': isDarkTheme}">
+    <div *ngIf="notifications.length > 0" class="task-tiles-wrapper" [ngClass]="{'dark-theme': isDarkTheme}">
+      <div class="notif-container" *ngFor="let notification of notifications" [ngClass]="{'dark-theme': isDarkTheme}">
+        <div class="notification-tile">
+          <div class="notification-header">
+            <strong>{{ notification.title }}</strong>
+          </div>
+          <div class="notification-body">
+            <p><strong>Message:</strong> {{ notification.message }}</p>
+            <p><strong>Deadline:</strong> {{ notification.deadline | date:'shortDate' }}</p>
+            <p><strong>Priority:</strong> {{ notification.priority }}</p>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div *ngIf="notifications.length === 0">
+      <p>No notifications available.</p>
+    </div>
+  </div>
+</div>

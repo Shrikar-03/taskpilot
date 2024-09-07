@@ -1,0 +1,749 @@
+/* Reset and base styles */
+:root {
+    --light-background: #f0f0f0;
+    --dark-background: #333;
+    --light-text: #000;
+    --dark-text: #fff;
+    --primary-color: #2ecc71;
+    --secondary-color: #3498db;
+    --gold: #ffd700;
+    --transition-duration: 0.3s;
+    --sidebar-width: 200px;
+  }
+  
+  * {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+  }
+  
+  
+  body {
+    font-family: Arial, sans-serif;
+    background-color: var(--light-background);
+    color: var(--light-text);
+    transition: background-color var(--transition-duration), color var(--transition-duration);
+  }
+  /* .task-tiles-wrapper {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 20px; /* Space between tiles 
+    width: 100%;
+  }
+   */
+  
+  /* body.dark-theme {
+    background-color: var(--dark-background);
+    color: var(--dark-text);
+  } */
+  
+  /* Sidebar styles */
+  .sidebar {
+    position: fixed;
+    top: 0;
+    left: 0;
+    height: 100%;
+    width: 60px;
+    background-color: #1abc9c;
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    padding-top: 20px;
+    transition: width 0.3s ease, background-color 0.3s ease;
+  }
+  
+  .sidebar.expanded {
+    width: 200px;
+  }
+  
+  .sidebar .expand-arrow {
+    cursor: pointer;
+    position: absolute;
+    top: 50%;
+    left: calc(100% - 20px);
+    width: 20px;
+    height: 60px;
+    border: 1px solid transparent;
+    transform: translateY(-50%);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background-color: #1abc9c;
+    color: #fff;
+    font-size: 18px;
+    transition: transform 0.3s ease, width 0.3s ease, left 0.3s ease;
+  }
+  
+  .sidebar.expanded .expand-arrow {
+    left: calc(100% - 30px);
+  }
+  
+  .sidebar .expand-arrow:hover {
+    width: 30px;
+    background-color: transparent;
+  }
+  
+  .sidebar.expanded .expand-arrow {
+    transform: translateY(-50%) rotate(180deg);
+  }
+  
+  .sidebar .sidebar-icons {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    width: 100%;
+    transition: align-items 0.3s ease;
+  }
+  
+  .sidebar.expanded .sidebar-icons {
+    align-items: flex-start;
+  }
+  
+  .sidebar .icon {
+    font-size: 18px;
+    margin: 15px 10px;
+    cursor: pointer;
+    position: relative;
+    transition: color 0.3s ease, transform 0.3s ease;
+    color: white;
+    display: flex;
+    align-items: center;
+  }
+  
+  .sidebar .icon span {
+    display: none;
+    margin-left: 10px;
+    font-size: 12px;
+  }
+  
+  .sidebar.expanded .icon span {
+    display: inline;
+  }
+  .sidebar.expanded .icon span:hover{
+    display: inline;
+    color:  #ffd700;
+    transform: scale(1.1);
+  }
+  
+  .sidebar .icon:hover {
+    color:  #ffd700;
+    transform: scale(1.1);
+  }
+  
+  .sidebar .theme-switch {
+    position: absolute;
+    bottom: 20px;
+    left: 50%;
+    transform: translateX(-50%);
+    cursor: pointer;
+    font-size: 100px;
+  }
+/*   
+  body.dark-theme .sidebar {
+    background-color: #01037661;
+  } */
+  
+  .main-content {
+    margin-left: 60px;
+    padding: 20px;
+    transition: margin-left 0.3s ease;
+  }
+  
+  .sidebar.expanded + .main-content {
+    margin-left: 200px;
+  }
+  .header-container {
+    position: sticky; /* Make the header sticky */
+    top: 0; /* Stick to the top of the viewport */
+    background-color:transparent; /* Match the background color of the main page */
+    border-bottom: 1px solid #ddd; /* Bottom border for separation */
+    box-shadow: none; /* Shadow for a bit of depth */
+    z-index: 2; /* Ensure it stays above other content */
+    height: 70px; /* Reduced height for the header */
+    box-sizing: border-box; /* Include padding and border in the height */
+    display: flex;
+    flex-direction: column; /* Stack items vertically */
+    padding: 5px 10px; /* Padding on all sides */
+    border:none;
+  }
+  
+  .search-container {
+    margin-top: 5px; /* Space between search container and add task button */
+    
+    display: flex;
+  }
+  
+  .search-container input {
+    padding: 10px;
+    width: calc(100% - 110px);
+    border: 1px solid #ccc;
+    border-radius: 4px;
+  }
+  
+  .search-container button {
+    background-color: #1abc9c;
+    color: #fff;
+    padding: 10px;
+    border: none;
+    border-radius: 3px;
+    cursor: pointer;
+    margin-left: 5px;
+    transition: background-color 0.3s eas
+  }
+  
+  .search-container button:hover {
+    background-color: #149b7b;
+  }
+  
+  header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 20px;
+  }
+  
+  #task-container {
+    margin-top: 20px;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 20px; /* Space between tiles */
+    overflow-y: auto;
+    max-height: 80vh; /* Adjust as needed */
+    padding: 20px; /* Padding around the container */
+    box-sizing: border-box; /* Include padding in the container's total width/height */
+  }
+  
+  .task-tile {
+    flex: 1 1 calc(45% - 20px); /* Reduce width of tiles with spacing */
+    background: #fff;
+    border-radius: 8px;
+    box-shadow: 0 1px 8px rgba(0, 0, 0, 0.1);
+    padding: 15px; /* Padding inside the tile */
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    align-items: flex-start;
+    transition: transform 0.3s ease, box-shadow 0.3s ease, border-color 0.3s ease;
+    position: relative;
+    cursor: pointer;
+    border: 2px solid transparent;
+    overflow: hidden;
+  }
+  
+  
+  .task-tile:hover {
+    transform: translateY(-5px) scale(1.05); /* Slight movement and zoom */
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.2); /* Increased shadow on hover */
+    border-color: transparent; /* Border color on hover */
+  }
+  
+  /* .task-tile.dark-theme {
+    background-color: #34495e;
+    color: #fff;
+  } */
+  
+  .task-tile .task-title {
+    font-size: 16px;
+    font-weight: bold;
+    margin-bottom: 10px;
+  }
+  
+  .task-details,
+  .task-assignee,
+  .task-priority,
+  .task-dates {
+    margin-bottom: 10px;
+  }
+  
+  .task-actions {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-top: 10px;
+  }
+  
+  .task-actions input[type="checkbox"] {
+    width: 20px;
+    height: 20px;
+    margin-right: 5px;
+  }
+  
+  .task-actions label {
+    font-size: 14px;
+    line-height: 20px;
+  }
+  
+  .task-actions .icon {
+    cursor: pointer;
+    transition: color 0.3s ease;
+    color: #888;
+    font-size: 18px;
+    margin-right: 5px;
+  }
+  
+  .task-actions .icon:hover {
+    color: #555;
+  }
+  
+  .task-tile:hover .task-attachment {
+    color: #555;
+  }
+  
+  .task-attachment:hover {
+    color: #555;
+  }
+  
+  .task-tile .task-actions {
+    display: flex;
+    position: absolute;
+    bottom: 10px;
+    right: 10px;
+    opacity: 0;
+    transition: opacity 0.3s ease;
+  }
+  
+  .task-tile:hover .task-actions {
+    opacity: 1;
+  }
+  
+  .task-tile .task-actions .icon[data-tooltip]:hover::after {
+    content: attr(data-tooltip);
+    position: absolute;
+    top: -25px;
+    left: 0;
+    background: #333;
+    color: #fff;
+    padding: 5px;
+    border-radius: 3px;
+    font-size: 12px;
+    white-space: nowrap;
+  }
+  
+  .task-tile .task-status {
+    font-size: 0.9em;
+    font-weight: bold;
+    margin-top: 8px;
+  }
+  
+  .task-tile.status-completed .task-status {
+    color: rgba(0, 128, 55, 0.641);
+  }
+  
+  .task-tile .add-files-btn {
+    position: absolute;
+    top: 10px;
+    right: 10px;
+    padding: 8px 15px;
+    background-color: #1abc9c;
+    color: #fff;
+    border: none;
+    border-radius: 3px;
+    cursor: pointer;
+    transition: background-color 0.3s ease, transform 0.3s ease;
+    display: none;
+    align-items: center;
+  }
+  
+  .task-tile .add-files-btn i {
+    margin-right: 5px;
+  }
+  
+  .task-tile:hover .add-files-btn {
+    display: inline-block;
+    background-color: #149b7b;
+    transform: scale(1.1);
+  }
+  /* DELETE FILES BUTTON */
+  .task-tile .del-file-btn {
+    position: absolute;
+    top: 10px;
+    right: 10px;
+    padding: 8px 15px;
+    background-color: #e74c3c;
+    color: #fff;
+    border: none;
+    border-radius: 3px;
+    cursor: pointer;
+    transition: background-color 0.3s ease, transform 0.3s ease;
+    display: none;
+    align-items: center;
+  }
+  
+  .task-tile .del-file-btn i {
+    margin-right: 5px;
+  }
+  
+  .task-tile:hover .del-file-btn {
+    display: inline-block;
+    background-color: #c0392b;
+    transform: scale(1.1);
+  }
+  
+  /* Add styles for filename display */
+/* Style for the file name link */
+.task-tile .file-name {
+  position: absolute;
+  top: 40px;
+  right: 10px;
+  color: #007bff; /* Default link color */
+  font-size: 14px;
+  font-weight: normal; /* Remove bold */
+  text-decoration: none; /* Remove underline by default */
+}
+
+.task-tile .file-name:hover {
+  text-decoration: underline; /* Underline on hover */
+}
+  /* Priority Hover Effects */
+  .task-tile.priority-low:hover {
+    border-color: green;
+  }
+  
+  .task-tile.priority-medium:hover {
+    border-color: yellow;
+  }
+  
+  .task-tile.priority-high:hover {
+    border-color: red;
+  }
+  
+  /* Dark theme styles */
+  /* .dark-theme .task-tile {
+    background: #333;
+    color: #fff;
+  }
+  
+  .dark-theme .task-tile .task-attachment,
+  .dark-theme .task-tile .task-actions .icon {
+    color: #aaa;
+  }
+  
+  .dark-theme .task-tile .task-attachment:hover,
+  .dark-theme .task-tile .task-actions .icon:hover {
+    color: #ddd;
+  } */
+  
+  /* Media queries */
+  @media (max-width: 768px) {
+    .task-tile {
+      flex: 1 1 100%;
+    }
+  }
+  
+  /* Task form overlay styles */
+  .error-message {
+    color: red;
+    font-size: 0.8em;
+    margin-top: 5px;
+  }
+  /* emp.component.css */
+  /* ... other styles ... */
+  
+  .modal {
+    display: block;
+    position: fixed;
+    z-index: 1;
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    overflow: auto;
+    background-color: rgb(0,0,0);
+    background-color: rgba(0,0,0,0.4);
+  }
+  
+  .modal-content {
+    background-color: #fefefe;
+    margin: 15% auto;
+    padding: 20px;
+    border: 1px solid #888;
+    width: 80%;
+  }
+  
+  .close-button {
+    color: #aaa;
+    float: right;
+    font-size: 28px;
+    font-weight: bold;
+  }
+  
+  .close-button:hover,
+  .close-button:focus {
+    color: black;
+    text-decoration: none;
+    cursor: pointer;
+  }
+  
+  .btn-yes {
+    background-color: green;
+    color: white;
+    padding: 10px 20px;
+    border: none;
+    cursor: pointer;
+  }
+  
+  .btn-no {
+    background-color: red;
+    color: white;
+    padding: 10px 20px;
+    border: none;
+    cursor: pointer;
+  }
+  
+  .dark-theme .modal-content {
+    background-color: #333;
+    color: #fff;
+  }
+  
+  
+  /* Animation */
+  @keyframes slideInFromLeft {
+    0% {
+      transform: translateX(-100%);
+    }
+    100% {
+      transform: translateX(0);
+    }
+  }
+  
+  @keyframes slideInFromRight {
+    0% {
+      transform: translateX(100%);
+    }
+    100% {
+      transform: translateX(0);
+    }
+  }
+  
+  .slide-in-left {
+    animation: slideInFromLeft 0.5s ease-out forwards;
+  }
+  
+  .slide-in-right {
+    animation: slideInFromRight 0.5s ease-out forwards;
+  }
+  
+
+  /* Dark themes */
+  :root {
+    --light-background: #f0f0f0;
+    --dark-background: #333;
+    --light-text: #000;
+    --dark-text: #fff;
+    --primary-color: #2ecc71;
+    --secondary-color: #3498db;
+    --gold: #ffd700;
+    --transition-duration: 0.3s;
+    --sidebar-width: 200px;
+    --dark-primary: #27ae60;
+    --dark-secondary: #2980b9;
+    --dark-gold: #b58900;
+    --dark-input-bg: #444;
+    --dark-input-border: #555;
+    --dark-input-text: #fff;
+    --dark-btn-bg: #555;
+    --dark-btn-hover-bg: #666;
+    --dark-btn-text: #fff;
+    --dark-modal-bg: rgba(0, 0, 0, 0.7);
+  }
+  
+  /* Common dark theme styles */
+  body.dark-theme {
+    background-color: #121212;
+    color: #e0e0e0;
+  }
+  
+  .sidebar.dark-theme {
+    background-color: #333;
+    color: #e0e0e0;
+  }
+  
+  .sidebar.dark-theme .sidebar-icons .icon {
+    border-bottom: 1px solid #444;
+  }
+  
+  .sidebar.dark-theme .expand-arrow {
+    color: #f0f0f0;
+    background-color: #333;
+  }
+  
+  .theme-switch.dark-theme #themeIcon {
+    color: #f0f0f0;
+  }
+  
+  .main-content.dark-theme {
+    background-color: #1e1e1e;
+    color: #e0e0e0;
+  }
+  
+  .search-container.dark-theme {
+    background-color: #333;
+  }
+  
+  .search-container.dark-theme input {
+    background-color: #444;
+    color: #e0e0e0;
+    border: 1px solid #555;
+  }
+  
+  .search-container.dark-theme button {
+    background-color: #444;
+    color: #e0e0e0;
+    border: 1px solid #555;
+  }
+  
+  .task-tile.dark-theme {
+    background-color: #2e2e2e;
+    color: #e0e0e0;
+    border: 1px solid #444;
+  }
+  
+  .task-tile.dark-theme .task-title {
+    font-weight: bold;
+  }
+  
+  .task-tile.dark-theme .task-details {
+    font-style: italic;
+  }
+  
+  .task-tile.dark-theme .task-priority,
+  .task-tile.dark-theme .task-assignee,
+  .task-tile.dark-theme .task-dates,
+  .task-tile.dark-theme .task-status {
+    color: #b0b0b0;
+  }
+  .add-files-btn{
+    background-color: #888;
+    color: #ccc;
+  }
+  .modal.dark-theme {
+    background-color: rgba(30, 30, 30, 0.9);
+  }
+  
+  .modal-content.dark-theme {
+    background-color: #444;
+    color: #f0f0f0;
+  }
+  
+  .close-button.dark-theme {
+    color: #f0f0f0;
+  }
+  
+  /* Button Dark Theme Styles */
+  button.add-files-btn.dark-theme {
+    background-color: #444;
+    color: #f0f0f0;
+  }
+  
+  button.save-file-btn.dark-theme {
+    background-color: #444;
+    color: #f0f0f0;
+  }
+  
+  button.btn-yes.dark-theme, 
+  button.btn-no.dark-theme {
+    background-color: #444;
+    color: #f0f0f0;
+  }
+  
+  .dark-theme .no-results-message {
+    color: #e0e0e0;
+  }
+  
+  .dark-theme .clear-search-btn {
+    background-color: #444;
+    color: #e0e0e0;
+    border: 1px solid #555;
+  }
+  
+  .dark-theme .search-submit-btn {
+    background-color: #444;
+    color: #e0e0e0;
+    border: 1px solid #555;
+  }
+  
+
+
+/* Base confirm-del styles */
+.confirm-del {
+  display: flex; /* Hidden by default */
+  position: fixed; /* Stay in place */
+  z-index: 1000; /* Sit on top */
+  left: 0;
+  top: 0;
+  width: 100%; /* Full width */
+  height: 100%; /* Full height */
+  overflow: auto; /* Enable scroll if needed */
+  background-color: rgba(0, 0, 0, 0.4); /* Black w/ opacity */
+  align-items: center;
+  justify-content: center;
+}
+
+/* Confirm-del content */
+.confirm-del-content {
+  background-color: #fefefe;
+  padding: 15px; /* Reduced padding */
+  border: 1px solid #888;
+  width: 250px; /* Smaller width */
+  height: 150px; /* Smaller height */
+  border-radius: 10px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+  text-align: center;
+  position: relative;
+}
+
+/* Dark theme styles */
+.dark-theme .confirm-del-content {
+  background-color: #333;
+  color: #fff;
+}
+
+/* Close button */
+.confirm-del-close-button {
+  color: black;
+  position: absolute;
+  top: 10px;
+  right: 10px;
+  font-size: 20px;
+  font-weight: bold;
+}
+
+.confirm-del-close-button:hover,
+.confirm-del-close-button:focus {
+  color: red;
+  text-decoration: none;
+  cursor: pointer;
+}
+
+/* Buttons */
+.btn-yes, .btn-no {
+  background-color: #4CAF50; /* Green */
+  color: white;
+  padding: 8px 16px; /* Slightly smaller padding */
+  margin: 5px; /* Reduced margin */
+  border: none;
+  cursor: pointer;
+  border-radius: 5px;
+  font-size: 14px;
+}
+
+.btn-no {
+  background-color: #f44336; /* Red */
+}
+
+.btn-yes:hover, .btn-no:hover {
+  opacity: 0.8;
+}
+
+.confirm-del-buttons-container {
+  margin-top: 10px; /* Reduced margin */
+}
+
+/* Container for buttons */
+.confirm-del-content .confirm-del-buttons-container {
+  display: flex;
+  justify-content: center;
+  margin-top: 10px; /* Adjusted for proper spacing */
+}
+
+

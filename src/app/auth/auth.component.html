@@ -1,0 +1,69 @@
+
+
+
+
+
+
+
+<div class="container" id="container">
+  <div class="form-container sign-up-container">
+    <form (ngSubmit)="onSignUp()" #signUpForm="ngForm">
+      <h1>Create Account</h1>
+      <div class="social-container">
+        <a href="#" class="social"><i class="fab fa-facebook-f"></i></a>
+        <a href="#" class="social"><i class="fab fa-google-plus-g"></i></a>
+        <a href="#" class="social"><i class="fab fa-linkedin-in"></i></a>
+      </div>
+      <span>or use your email for registration</span>
+      <input type="text" [(ngModel)]="signUpName" placeholder="Name" name="name" required (input)="validateForm()" />
+      <input type="email" [(ngModel)]="signUpEmail" placeholder="Email" name="email" required (input)="validateForm()" />
+      <input type="password" [(ngModel)]="signUpPassword" placeholder="Password" name="password" required 
+        (input)="validatePassword()" (focus)="onPasswordFocus()" (blur)="onPasswordBlur()" />
+      <div class="validation-messages" *ngIf="passwordFocused">
+        <p *ngIf="!isPasswordLongEnough">Password must be at least 5 characters long.</p>
+        <p *ngIf="!hasNumber">Password must contain at least one number.</p>
+        <p *ngIf="!hasSpecialCharacter">Password must contain at least one special character.</p>
+      </div>
+      <button type="submit" [disabled]="!isFormValid()">Sign Up</button>
+    </form>
+  </div>
+  <div class="form-container sign-in-container">
+    <form (ngSubmit)="onSignIn()">
+      <h1>Sign in</h1>
+      <div class="social-container">
+        <a href="#" class="social"><i class="fab fa-facebook-f"></i></a>
+        <a href="#" class="social"><i class="fab fa-google-plus-g"></i></a>
+        <a href="#" class="social"><i class="fab fa-linkedin-in"></i></a>
+      </div>
+      <span>or use your account</span>
+      <input type="email" [(ngModel)]="signInEmail" placeholder="Email" name="email" required />
+      <input type="password" [(ngModel)]="signInPassword" placeholder="Password" name="password" required />
+      <a href="#">Forgot your password?</a>
+      <button type="submit">Sign In</button>
+      <p class="error-message" *ngIf="errorMessage">{{ errorMessage }}</p>
+    </form>
+  </div>
+  <div class="overlay-container">
+    <div class="overlay">
+      <div class="overlay-panel overlay-left">
+        <h1>Welcome Back!</h1>
+        <p>To keep connected with us please login with your personal info</p>
+        <button class="ghost" (click)="signIn()">Sign In</button>
+      </div>
+      <div class="overlay-panel overlay-right">
+        <h1>Hello, Friend!</h1>
+        <p>Enter your personal details and start journey with us</p>
+        <button class="ghost" (click)="signUp()">Sign Up</button>
+      </div>
+    </div>
+  </div>
+  <!-- Sign Up Success Modal -->
+  <div class="modal" id="signupSuccessModal">
+    <div class="modal-content">
+      <h2>Sign Up Successful!</h2>
+      <p>Your account has been created successfully.</p>
+      <button (click)="continueToSignIn()">Continue to Sign In</button>
+    </div>
+  </div>
+</div>
+

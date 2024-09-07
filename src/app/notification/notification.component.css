@@ -1,0 +1,266 @@
+/* .notification-container {
+    position: fixed;
+    top: 10px;
+    right: 10px;
+    max-width: 300px;
+    z-index: 1000;
+  }
+  
+  .notification {
+    background-color: #f8f9fa;
+    border: 1px solid #dee2e6;
+    border-radius: 5px;
+    padding: 10px;
+    margin-bottom: 10px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  }
+  
+  .notification-header {
+    font-weight: bold;
+  }
+  
+  .notification-body p {
+    margin: 5px 0;
+  } */
+  :root {
+    --light-background: #f0f0f0;
+    --dark-background: #121212;
+    --light-text: #000;
+    --dark-text: #e0e0e0;
+    --primary-color: #2ecc71;
+    --secondary-color: #3498db;
+    --gold: #ffd700;
+    --transition-duration: 0.3s;
+    --sidebar-width: 200px;
+    --dark-primary: #27ae60;
+    --dark-secondary: #2980b9;
+    --dark-gold: #b58900;
+    --dark-input-bg: #444;
+    --dark-input-border: #555;
+    --dark-input-text: #fff;
+    --dark-btn-bg: #555;
+    --dark-btn-hover-bg: #666;
+    --dark-btn-text: #fff;
+    --dark-modal-bg: rgba(0, 0, 0, 0.7);
+  }
+  
+  /* Reset and box-sizing */
+  * {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+  }
+  
+  /* Body and common styles */
+  body {
+    font-family: Arial, sans-serif;
+    background-color: var(--light-background);
+    color: var(--light-text);
+    transition: background-color var(--transition-duration), color var(--transition-duration);
+  }
+  
+  body.dark-theme {
+    background-color: var(--dark-background);
+    color: var(--dark-text);
+  }
+  
+  /* Sidebar styles */
+  .sidebar {
+    position: fixed;
+    top: 0;
+    left: 0;
+    height: 100%;
+    width: 60px;
+    background-color: #1abc9c;
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    padding-top: 20px;
+    transition: width 0.3s ease, background-color 0.3s ease;
+  }
+  
+  .sidebar.expanded {
+    width: 200px;
+  }
+  
+  .sidebar .expand-arrow {
+    cursor: pointer;
+    position: absolute;
+    top: 50%;
+    left: calc(100% - 20px);
+    width: 20px;
+    height: 60px;
+    border: 1px solid transparent;
+    transform: translateY(-50%);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background-color: #1abc9c;
+    color: #fff;
+    font-size: 18px;
+    transition: transform 0.3s ease, width 0.3s ease, left 0.3s ease;
+  }
+  
+  .sidebar.expanded .expand-arrow {
+    left: calc(100% - 30px);
+  }
+  
+  .sidebar .expand-arrow:hover {
+    width: 30px;
+    background-color: transparent;
+  }
+  
+  .sidebar.expanded .expand-arrow {
+    transform: translateY(-50%) rotate(180deg);
+  }
+  
+  .sidebar .sidebar-icons {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    width: 100%;
+    transition: align-items 0.3s ease;
+  }
+  
+  .sidebar.expanded .sidebar-icons {
+    align-items: flex-start;
+  }
+  
+  .sidebar .icon {
+    font-size: 18px;
+    margin: 15px 10px;
+    cursor: pointer;
+    position: relative;
+    transition: color 0.3s ease, transform 0.3s ease;
+    color: white;
+    display: flex;
+    align-items: center;
+  }
+  
+  .sidebar .icon span {
+    display: none;
+    margin-left: 10px;
+    font-size: 12px;
+  }
+  
+  .sidebar.expanded .icon span {
+    display: inline;
+  }
+  .sidebar.expanded .icon span:hover{
+    display: inline;
+    color:  #ffd700;
+    transform: scale(1.1);
+  }
+  
+  .sidebar .icon:hover {
+    color:  #ffd700;
+    transform: scale(1.1);
+  }
+  
+  .sidebar .theme-switch {
+    position: absolute;
+    bottom: 20px;
+    left: 50%;
+    transform: translateX(-50%);
+    cursor: pointer;
+    font-size: 100px;
+  }
+  
+  .sidebar.dark-theme {
+    background-color: #121212;
+    color: #e0e0e0;
+  }
+  
+  .sidebar.dark-theme .expand-arrow {
+    color: #f0f0f0;
+    background-color:#121212;
+  }
+  
+  .main-content {
+    margin-left: 60px;
+    padding: 20px;
+    transition: margin-left 0.3s ease;
+  }
+  
+  .sidebar.expanded + .main-content {
+    margin-left: var(--sidebar-width);
+  }
+  
+  .main-content.dark-theme {
+    background-color: #333;
+    color: #e0e0e0;
+  }
+  
+  /* Task container and notifications */
+  .task-container {
+    padding: 20px;
+    background-color: var(--light-background);
+    color: var(--light-text);
+    transition: background-color var(--transition-duration), color var(--transition-duration);
+  }
+  
+  .task-container.dark-theme {
+    background-color: #333;
+    color: #e0e0e0;
+  }
+    
+  .sidebar.dark-theme .sidebar-icons .icon {
+    border-bottom: 1px solid #121212;
+  }
+  
+  .notification-container {
+    background-color: var(--primary-color);
+    border-radius: 10px;
+    padding: 10px;
+    margin-bottom: 10px;
+    transition: background-color var(--transition-duration);
+  }
+  
+  .notification-container.dark-theme {
+    background-color: #444;
+  }
+  
+  .notif-container {
+    background-color: var(--secondary-color);
+    border-radius: 5px;
+    padding: 10px;
+    margin-bottom: 5px;
+    transition: background-color var(--transition-duration);
+  }
+  
+  .notif-container.dark-theme {
+    background-color: #444;
+  }
+  
+  .notification {
+    background-color: var(--light-background);
+    border-radius: 5px;
+    padding: 10px;
+    margin-bottom: 5px;
+    transition: background-color var(--transition-duration), color var(--transition-duration);
+  }
+  
+  .notification.dark-theme {
+    background-color:#333;
+    color: #e0e0e0;
+  }
+  
+  .notification-header {
+    font-weight: bold;
+  }
+  
+  .notification-body p {
+    margin: 5px 0;
+  }
+  .task-tiles-wrapper {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 20px; /* Space between tiles */
+    width: 100%; /* Ensure it takes full width */
+  }
+  
+  .task-tiles-wrapper.dark-theme {
+    background-color: #444;
+    color: #e0e0e0;
+  }
+  

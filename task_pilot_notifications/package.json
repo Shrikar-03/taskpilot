@@ -1,0 +1,25 @@
+{
+  "name": "task_pilot_notifications",
+  "version": "1.0.0",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "description": "",
+  "dependencies": {
+    "firebase-admin": "^12.3.0"
+  },
+  "devDependencies": {
+    "@angular-eslint/eslint-plugin": "^18.2.0",
+    "@angular-eslint/eslint-plugin-template": "^18.2.0",
+    "@eslint/js": "^9.8.0",
+    "@typescript-eslint/eslint-plugin": "^8.0.0",
+    "@typescript-eslint/parser": "^8.0.0",
+    "eslint": "^9.8.0",
+    "globals": "^15.8.0",
+    "typescript-eslint": "^8.0.0"
+  }
+}
